@@ -1,0 +1,53 @@
+========================================
+⚠️ 重要：如何正确访问网站
+========================================
+
+❌ 错误的方式（会导致 404 错误）：
+   - 双击打开 index.html 文件
+   - 使用 file:// 协议
+   - 直接打开本地文件
+
+✅ 正确的方式：
+
+方法 1：访问 GitHub Pages（推荐）
+   - 打开浏览器（Chrome、Edge、Firefox 等）
+   - 在地址栏输入：
+     https://514ctdawn.github.io/Star-Greenhouse-100-Survival/
+   - 按 Enter
+
+方法 2：使用本地开发服务器
+   - 双击 start-game.bat 文件
+   - 访问：http://localhost:5173
+
+方法 3：双击启动脚本
+   - 双击 "打开网站.bat" 文件
+   - 会自动在浏览器中打开 GitHub Pages
+
+========================================
+为什么会出现 404 错误？
+========================================
+
+如果您看到 "main.jsx:1 Failed to load resource: 404" 错误，
+说明您直接打开了本地的 index.html 文件。
+
+index.html 中的 <script src="/src/main.jsx"> 是开发环境的文件，
+只有在开发服务器运行时才能访问。
+
+生产环境（GitHub Pages）使用的是构建后的文件：
+- /assets/index-XXXXX.js（已编译的 JavaScript）
+- /assets/index-XXXXX.css（已编译的 CSS）
+
+========================================
+快速解决
+========================================
+
+1. 不要双击 index.html 文件
+2. 在浏览器地址栏输入：
+   https://514ctdawn.github.io/Star-Greenhouse-100-Survival/
+3. 按 Enter
+
+或者：
+1. 双击 "打开网站.bat" 文件
+
+========================================
+
