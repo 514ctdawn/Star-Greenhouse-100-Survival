@@ -90,6 +90,13 @@ function App() {
   const handleApplyWithFeedback = () => {
     const success = applyPercentage()
     
+    console.log('🎮 handleApplyWithFeedback:', { success })
+    
+    if (success) {
+      // Stop timer on success
+      setIsTimerRunning(false)
+    }
+    
     setFeedbackModal({
       isOpen: true,
       status: success ? 'success' : 'failure',

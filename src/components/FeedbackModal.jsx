@@ -249,7 +249,16 @@ function FeedbackModal({
               {status === 'success' ? (
                 <>
                   <button
-                    onClick={onNext}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      console.log('🎮 Next level button clicked!')
+                      if (onNext) {
+                        onNext()
+                      } else {
+                        console.error('⚠️ onNext is not defined!')
+                      }
+                    }}
                     className="flex-1 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
                   >
                     進入下一關
