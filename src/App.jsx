@@ -95,12 +95,31 @@ function App() {
     if (success) {
       // Stop timer on success
       setIsTimerRunning(false)
+      
+      // Auto progress to next level after showing success modal briefly
+      setFeedbackModal({
+        isOpen: true,
+        status: 'success',
+      })
+      
+      // Auto advance to next level after 2 seconds
+      setTimeout(() => {
+        const nextLevelMap = { A: 'B', B: 'C', C: 'A' }
+        const nextLevel = nextLevelMap[currentLevel]
+        
+        console.log('🎮 Auto-advancing to next level:', { currentLevel, nextLevel })
+        
+        if (nextLevel && nextLevel !== currentLevel) {
+          setFeedbackModal({ isOpen: false, status: null })
+          changeLevel(nextLevel)
+        }
+      }, 2000) // Show success message for 2 seconds, then auto-advance
+    } else {
+      setFeedbackModal({
+        isOpen: true,
+        status: 'failure',
+      })
     }
-    
-    setFeedbackModal({
-      isOpen: true,
-      status: success ? 'success' : 'failure',
-    })
     
     return success
   }
