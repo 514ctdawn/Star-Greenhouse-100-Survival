@@ -107,9 +107,16 @@ function App() {
     const nextLevelMap = { A: 'B', B: 'C', C: 'A' }
     const nextLevel = nextLevelMap[currentLevel]
     if (nextLevel) {
-      handleLevelChange(nextLevel)
+      // Close modal first
+      setFeedbackModal({ isOpen: false, status: null })
+      // Then change level (with transition)
+      // Small delay to ensure modal closes before transition starts
+      setTimeout(() => {
+        handleLevelChange(nextLevel)
+      }, 100)
+    } else {
+      setFeedbackModal({ isOpen: false, status: null })
     }
-    setFeedbackModal({ isOpen: false, status: null })
   }
 
   const handleRetry = () => {
