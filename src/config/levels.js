@@ -6,7 +6,7 @@ export const LEVELS = {
     totalCells: 100,
     gridCols: 10,
     gridRows: 10,
-    targetPercentage: 50,
+    targetPercentage: 40,
     wastePercentage: 0,
     timeLimit: 60, // seconds
     goal: '理解 1% = 1 格',
@@ -19,7 +19,7 @@ export const LEVELS = {
     gridCols: 10,
     gridRows: 5,
     targetPercentage: 40,
-    wastePercentage: 10,
+    wastePercentage: 10, // 5 cells out of 50 = 10%
     timeLimit: 45, // seconds
     goal: '計算總格數，然後減去廢料格數',
   },
@@ -30,8 +30,8 @@ export const LEVELS = {
     totalCells: 80,
     gridCols: 10,
     gridRows: 8,
-    targetPercentage: 30,
-    wastePercentage: 10,
+    targetPercentage: 25,
+    wastePercentage: 10, // 8 cells out of 80 = 10%
     timeLimit: 30, // seconds
     goal: '計算總格數，然後減去廢料格數',
   },

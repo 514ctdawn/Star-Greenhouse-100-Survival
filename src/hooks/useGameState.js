@@ -189,29 +189,30 @@ export function useGameState() {
   const applyPercentage = useCallback(() => {
     // 重新計算當前網格狀態（防止狀態不同步）
     const totalCells = gridState.length
-    const filledCount = gridState.filter((cell, index) => cell && !wasteIndices[index]).length
+    const manualFilledCount = gridState.filter((cell, index) => cell && !wasteIndices[index]).length
     const wasteCount = wasteIndices.filter(Boolean).length
-    const actualTotalCells = filledCount + wasteCount
+    const currentTotal = manualFilledCount + wasteCount
     
-    // 使用 Math.round 避免浮點數誤差
-    const requiredTotalCells = Math.round((totalCells * targetPercentage) / 100)
+    // 計算目標需要的總格數：(總格數 * 目標百分比 / 100)
+    const requiredCount = Math.round((totalCells * targetPercentage) / 100)
     
-    console.log(`[判定邏輯] 總格數：${totalCells}，已填：${filledCount} 格，廢料：${wasteCount} 格，總計：${actualTotalCells} 格`)
-    console.log(`[判定邏輯] 目標 ${targetPercentage}% 需要：${requiredTotalCells} 格`)
+    console.log(`[判定邏輯] 總格數：${totalCells}，手動填滿：${manualFilledCount} 格，廢料：${wasteCount} 格，總計：${currentTotal} 格`)
+    console.log(`[判定邏輯] 目標 ${targetPercentage}% 需要：${requiredCount} 格`)
     
     // 精確比較：使用整數比較，避免浮點數誤差
-    const isCorrect = actualTotalCells === requiredTotalCells
+    // 判斷方式：(手動填滿 + 廢料) 是否等於 (總格數 * 目標百分比 / 100)
+    const isCorrect = currentTotal === requiredCount
     
     if (isCorrect) {
       // Success!
-      console.log(`[判定邏輯] ✅ 任務成功！實際 ${actualTotalCells} 格 = 目標 ${requiredTotalCells} 格`)
+      console.log(`[判定邏輯] ✅ 任務成功！實際 ${currentTotal} 格 = 目標 ${requiredCount} 格`)
       setInputPercentage(0)
       setOxygen(prev => Math.min(100, prev + 10)) // Reward: restore oxygen
       setIsTimerRunning(false)
       return true
     } else {
       // Failure
-      console.log(`[判定邏輯] ❌ 任務失敗！實際 ${actualTotalCells} 格 ≠ 目標 ${requiredTotalCells} 格`)
+      console.log(`[判定邏輯] ❌ 任務失敗！實際 ${currentTotal} 格 ≠ 目標 ${requiredCount} 格`)
       return false
     }
   }, [gridState, wasteIndices, levelConfig.totalCells, targetPercentage])
