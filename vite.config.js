@@ -3,6 +3,6 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: './', // Use relative paths so the app can be opened directly from file://
+  base: '/Star-Greenhouse-100-Survival/', // GitHub Pages 路径
 })
 
