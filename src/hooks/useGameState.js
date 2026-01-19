@@ -248,9 +248,21 @@ export function useGameState() {
   }, [currentLevel, lowOxygenTimer])
 
   const changeLevel = useCallback((levelId) => {
-    console.log('changeLevel called in useGameState:', levelId)
-    setCurrentLevel(levelId)
-  }, [])
+    console.log('🎮 changeLevel called in useGameState:', levelId)
+    console.log('🎮 Current level before change:', currentLevel)
+    
+    if (levelId && levelId !== currentLevel) {
+      console.log('✅ Setting currentLevel to:', levelId)
+      setCurrentLevel(levelId)
+      
+      // Force immediate update
+      setTimeout(() => {
+        console.log('🎮 Level should be changed to:', levelId)
+      }, 0)
+    } else {
+      console.log('⚠️ Invalid level change:', { levelId, currentLevel })
+    }
+  }, [currentLevel])
 
   return {
     // Level info

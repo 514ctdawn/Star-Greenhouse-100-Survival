@@ -122,14 +122,17 @@ function App() {
     console.log('🎮 handleNextLevel called:', { currentLevel, nextLevel })
     
     if (nextLevel && nextLevel !== currentLevel) {
-      // Close modal first
+      // Close modal immediately
       setFeedbackModal({ isOpen: false, status: null })
       
-      // Use requestAnimationFrame to ensure modal closes before level change
-      requestAnimationFrame(() => {
-        console.log('🎮 Calling handleLevelChange with:', nextLevel)
-        handleLevelChange(nextLevel)
-      })
+      // Directly change level without transition delay for now
+      console.log('🎮 Directly calling changeLevel with:', nextLevel)
+      changeLevel(nextLevel)
+      
+      // Optional: Add transition later if needed
+      // setTimeout(() => {
+      //   handleLevelChange(nextLevel)
+      // }, 100)
     } else {
       console.log('⚠️ No valid next level:', { nextLevel, currentLevel })
       setFeedbackModal({ isOpen: false, status: null })
