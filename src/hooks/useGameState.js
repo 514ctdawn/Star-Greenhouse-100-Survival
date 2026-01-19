@@ -248,6 +248,7 @@ export function useGameState() {
   }, [currentLevel, lowOxygenTimer])
 
   const changeLevel = useCallback((levelId) => {
+    console.log('changeLevel called in useGameState:', levelId)
     setCurrentLevel(levelId)
   }, [])
 

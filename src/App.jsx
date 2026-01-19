@@ -69,16 +69,21 @@ function App() {
 
   // Handle level change with transition
   const handleLevelChange = (levelId) => {
+    console.log('handleLevelChange called:', { levelId, currentLevel })
     if (levelId !== currentLevel) {
+      console.log('Setting level transition')
       setLevelTransition({
         from: currentLevel,
         to: levelId,
         message: `警告！正在切換至${levelId === 'B' ? '小型備用儲氣槽（容量 50 單元）' : levelId === 'C' ? '大型儲氣槽（容量 200 單元）' : '標準儲氣槽（容量 100 單元）'}...`
       })
       setTimeout(() => {
+        console.log('Calling changeLevel with:', levelId)
         changeLevel(levelId)
         setLevelTransition(null)
       }, 2000)
+    } else {
+      console.log('Level ID matches current level, skipping change')
     }
   }
 
@@ -106,15 +111,20 @@ function App() {
     // Auto progress to next level on success
     const nextLevelMap = { A: 'B', B: 'C', C: 'A' }
     const nextLevel = nextLevelMap[currentLevel]
-    if (nextLevel) {
+    
+    console.log('🎮 handleNextLevel called:', { currentLevel, nextLevel })
+    
+    if (nextLevel && nextLevel !== currentLevel) {
       // Close modal first
       setFeedbackModal({ isOpen: false, status: null })
-      // Then change level (with transition)
-      // Small delay to ensure modal closes before transition starts
-      setTimeout(() => {
+      
+      // Use requestAnimationFrame to ensure modal closes before level change
+      requestAnimationFrame(() => {
+        console.log('🎮 Calling handleLevelChange with:', nextLevel)
         handleLevelChange(nextLevel)
-      }, 100)
+      })
     } else {
+      console.log('⚠️ No valid next level:', { nextLevel, currentLevel })
       setFeedbackModal({ isOpen: false, status: null })
     }
   }
