@@ -1,123 +1,125 @@
-# Star Greenhouse: 100% Survival
+# 🌟 Star Greenhouse: 100% Survival
 
-A primary school math game focused on teaching percentages using mechanics inspired by "Oxygen Not Included".
+一个用于教授小学生百分比概念的互动式数学游戏。通过太空温室生存主题，让学生理解百分比作为比例的概念。
 
-## Features
+## 🎮 游戏特色
 
-- **Interactive 10x10 Grid**: Visual representation of percentages (100 cells = 100%)
-- **Real-time Meters**: Oxygen, Power, and Bio-Waste meters that decay over time
-- **Percentage Visualization**: Cells light up based on the percentage entered
-- **Impurity Mode**: Add random waste (5-10%) to practice calculating remaining space
-- **Cascading Failure Effects**: 
-  - Pressure warning when total exceeds 100% (screen shake + red flash)
-  - Plant wilting animation when oxygen stays below 20% for >10 seconds
-- **Validation System**: Instant feedback on success/failure
-- **Interactive Tutorial System (繁體中文)**: 
-  - Step-by-step guided tutorial with element highlighting
-  - Only shows once on first visit (uses localStorage)
-  - Can be restarted anytime via "重新開始教學" button
-  - Interactive step requiring user to adjust slider before proceeding
-  - Real-time calculation hints during impurity mode tutorial
-- **Stylized Feedback Modals (繁體中文)**:
-  - Success modal with emerald/green theme and reward animation (+50 points)
-  - Failure modal with rose/red theme and shake animation
-  - Intelligent error detection (over 100%, under target, impurity not calculated)
-  - Educational hints and guidance messages for each error type
-  - Sound effect placeholders for future audio integration
+- **动态网格系统**：不同关卡有不同的总格数（100格、50格、200格），让学生理解百分比是相对于总量的比例
+- **废料挑战**：某些关卡包含废料格子，学生必须计算可用空间
+- **时间限制**：增加游戏紧张感和挑战性
+- **滑动选择**：支持点击和拖拽两种方式选择格子
+- **实时反馈**：失败时提供教育性提示，帮助学生理解错误原因
 
-## Tech Stack
+## 🚀 快速开始
 
-- React 18 (Vite)
-- Tailwind CSS
-- Framer Motion (animations)
-- Lucide React (icons)
+### 方法 1：使用开发服务器（推荐）
 
-## Getting Started
+双击 `start-game.bat` 文件，游戏会自动在浏览器中打开。
 
-1. Install dependencies:
+### 方法 2：手动启动
+
 ```bash
+# 安装依赖
 npm install
-```
 
-2. Start the development server:
-```bash
+# 启动开发服务器
 npm run dev
 ```
 
-3. Open your browser to the URL shown in the terminal (usually `http://localhost:5173`)
+然后在浏览器访问：`http://localhost:5173`
 
-## How to Play
+### 方法 3：构建并预览
 
-### First Time Users
-When you first open the game, an interactive tutorial (繁體中文) will guide you through all features. The tutorial:
-- Highlights specific UI elements
-- Explains each feature step-by-step
-- Requires interaction at step 3 (adjusting the oxygen slider)
-- Shows real-time calculation hints during impurity mode
+```bash
+# 构建项目
+npm run build
 
-### Gameplay
+# 预览构建版本
+npm run preview
+```
 
-1. **Set Target Percentage (設定目標百分比)**: Use the slider or input field to set your target percentage
-2. **Adjust Oxygen Refill (調整氧氣填充量)**: Use the slider to set how much oxygen you want to add
-3. **Toggle Impurity Mode (開啟雜質模式)**: Enable to add random waste (5-10%) to the system
-4. **Add Impurities (添加雜質)**: Click the button to randomly add 5-10% waste
-5. **Apply (執行)**: Click "執行" to check if your calculation is correct
-   - Success: The grid border glows green and oxygen is restored
-   - Failure: See feedback showing how far off you were
+访问：`http://localhost:4173`
 
-### Restart Tutorial
-Click "重新開始教學" button in the control panel to restart the tutorial anytime.
+## 📋 关卡配置
 
-## Game Mechanics
+### Level A（基础）
+- 总格数：100 格（10x10）
+- 目标百分比：50%
+- 废料：0%
+- 时间限制：60秒
+- **教学目标**：理解 1% = 1 格
 
-- **Percentage Calculation**: `Current% + Input% + Impurity% = Total%`
-- **Success Condition**: Total% must equal Target% (within 0.1% tolerance)
-- **Pressure Warning**: Triggers when Total% > 100%
-- **Plant Wilting**: Triggers when Oxygen < 20% for more than 10 seconds
+### Level B（进阶）
+- 总格数：50 格（10x5）
+- 目标百分比：40%
+- 废料：10%（5个红色格子）
+- 时间限制：45秒
+- **教学目标**：计算总格数，然后减去废料格数
 
-### Feedback System
+### Level C（挑战）
+- 总格数：200 格（20x10）
+- 目标百分比：30%
+- 废料：5%（10个红色格子）
+- 时间限制：30秒
+- **教学目标**：在大基数下计算百分比并减去废料
 
-The game provides detailed feedback through stylized modals:
+## 🎯 游戏玩法
 
-**Success Modal:**
-- Emerald/green theme with smooth slide-in animation
-- Shows "Mission Accomplished" message
-- Displays reward (+50 points)
-- Options: "進入下一關" or "繼續強化基地"
+1. **选择关卡**：从 Level A、B、C 中选择一个
+2. **填充格子**：
+   - 点击单个格子进行选择/取消选择
+   - 按住鼠标拖动可以快速选择多个格子
+   - 使用右侧滑杆调整填充数量
+3. **执行任务**：当总填充格数（包括废料）达到目标百分比时，点击"执行"按钮
+4. **查看反馈**：成功或失败后都会显示详细反馈
 
-**Failure Modal:**
-- Rose/red theme with shake animation
-- Intelligent error detection:
-  - **Over 100%**: Warns about system overload
-  - **Under Target**: Shows gap percentage needed
-  - **Impurity Not Calculated**: Detects when user forgot to account for waste
-  - **General Mismatch**: Shows error margin
-- Educational hints for each error type
-- Options: "重新檢查數值" or "請求技術支援"
+## 🛠️ 技术栈
 
-## Project Structure
+- **React** (Vite)
+- **Tailwind CSS**
+- **Framer Motion** (动画)
+- **Lucide React** (图标)
+
+## 📁 项目结构
 
 ```
 src/
-├── components/
-│   ├── TopBar.jsx          # Meter display (氧氣, 電力, 生物廢料)
-│   ├── GridSystem.jsx      # 10x10 interactive grid
-│   ├── ControlPanel.jsx    # Control inputs and buttons (繁體中文)
-│   ├── TutorialManager.jsx # Interactive tutorial system (繁體中文)
-│   └── FeedbackModal.jsx   # Success/failure feedback modals (繁體中文)
+├── components/          # React 组件
+│   ├── GridSystem.jsx   # 网格系统
+│   ├── ControlPanel.jsx # 控制面板
+│   ├── FeedbackModal.jsx # 反馈弹窗
+│   ├── CountdownBar.jsx # 倒计时条
+│   └── ...
+├── config/
+│   └── levels.js       # 关卡配置
 ├── hooks/
-│   ├── useGameState.js     # Game state management
-│   └── useLocalStorage.js  # LocalStorage hook for tutorial persistence
-├── App.jsx                 # Main application component
-├── main.jsx               # Entry point
-└── index.css              # Global styles
+│   ├── useGameState.js # 游戏状态管理
+│   └── useLocalStorage.js # 本地存储
+└── App.jsx             # 主应用组件
 ```
 
-## Future Enhancements
+## 🌐 GitHub Pages 部署
 
-- Multiplayer/cooperative mode
-- Teacher console with attempt logging
-- "Heavy Bottle" feature (12.5% increments)
-- More visual feedback and animations
-- Difficulty levels
+项目已推送到 GitHub，可以通过以下方式部署到 GitHub Pages：
 
+1. 在 GitHub 仓库设置中启用 GitHub Pages
+2. 选择 `main` 分支和 `/dist` 目录
+3. 访问：`https://514ctdawn.github.io/Star-Greenhouse-100-Survival/`
+
+## 📝 注意事项
+
+- ⚠️ **不能直接打开 HTML 文件**：由于浏览器安全策略，必须使用本地服务器运行
+- 使用 `start-game.bat` 是最简单的启动方式
+- 确保已安装 Node.js 和 npm
+
+## 📄 许可证
+
+MIT License
+
+## 👨‍💻 作者
+
+514ctdawn
+
+---
+
+**教育目标**：通过游戏化学习，帮助学生理解百分比是相对于总量的比例，而不是固定的数值。
