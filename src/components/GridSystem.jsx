@@ -235,15 +235,11 @@ function GridSystem({
                     }
                   }}
                   onClick={(e) => {
+                    // Prevent default click behavior - handleMouseUp already handles the toggle
                     e.stopPropagation()
                     e.preventDefault()
-                    e.nativeEvent.stopImmediatePropagation()
-                    
-                    if (isClickable && dragStartRef.current === index && !hasMovedRef.current) {
-                      if (onCellToggle) {
-                        onCellToggle(index)
-                      }
-                    }
+                    // Don't call onCellToggle here - handleMouseUp already handles it
+                    // This prevents double-toggling which causes double counting
                   }}
                   onMouseEnter={(e) => {
                     if (isClickable && mouseDownRef.current) {
