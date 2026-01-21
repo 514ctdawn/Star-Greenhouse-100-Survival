@@ -19,11 +19,12 @@ function ControlPanel({
 
   // Calculate slider cells for display
   const sliderCells = Math.round((inputPercentage / 100) * levelConfig.totalCells)
-  // Use selectedCount as the source of truth - it represents actual filled cells from gridState
+  // Use selectedCount as the source of truth - it represents actual filled cells from gridState (excluding waste)
   // This ensures "總計已選" matches "已手動填充" exactly
   const totalSelected = selectedCount
-  // For win condition: totalCount = manually filled cells (selectedCount) + waste cells (wasteCellsCount)
-  // But for display: "總計填充" should only show manually filled cells (totalSelected)
+  // totalCount = manually filled cells (selectedCount) + waste cells (wasteCellsCount)
+  // This is correct: selectedCount excludes waste, so adding wasteCellsCount gives the total filled
+  // No double counting: selectedCount only counts non-waste filled cells
   const totalCount = totalSelected + wasteCellsCount
   
   // Calculate required cells for button state (including waste for win condition)
@@ -86,7 +87,7 @@ function ControlPanel({
             <div className="border-t border-white/10 pt-3 flex justify-between items-center">
               <span className="text-slate-200 font-semibold">總計填充：</span>
               <span className="text-cyan-400 font-mono font-bold text-lg">
-                {totalSelected} / {levelConfig.totalCells} 格
+                {totalCount} / {levelConfig.totalCells} 格
               </span>
             </div>
           </div>
