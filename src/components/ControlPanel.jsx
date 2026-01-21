@@ -22,11 +22,11 @@ function ControlPanel({
   // Use selectedCount as the source of truth - it represents actual filled cells from gridState
   // This ensures "總計已選" matches "已手動填充" exactly
   const totalSelected = selectedCount
-  // totalCount = manually filled cells (selectedCount) + waste cells (wasteCellsCount)
-  // This is correct: selectedCount excludes waste, so adding wasteCellsCount gives the total filled
+  // For win condition: totalCount = manually filled cells (selectedCount) + waste cells (wasteCellsCount)
+  // But for display: "總計填充" should only show manually filled cells (totalSelected)
   const totalCount = totalSelected + wasteCellsCount
   
-  // Calculate required cells for button state
+  // Calculate required cells for button state (including waste for win condition)
   const requiredCells = Math.round((levelConfig.totalCells * targetPercentage) / 100)
   const isNearTarget = Math.abs(totalCount - requiredCells) < 0.5
 
@@ -86,7 +86,7 @@ function ControlPanel({
             <div className="border-t border-white/10 pt-3 flex justify-between items-center">
               <span className="text-slate-200 font-semibold">總計填充：</span>
               <span className="text-cyan-400 font-mono font-bold text-lg">
-                {totalCount} / {levelConfig.totalCells} 格
+                {totalSelected} / {levelConfig.totalCells} 格
               </span>
             </div>
           </div>
