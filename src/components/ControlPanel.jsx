@@ -17,12 +17,12 @@ function ControlPanel({
     }
   }
 
-  // Calculate slider cells for display (slider and manual clicks are synced)
+  // Calculate slider cells for display
   const sliderCells = Math.round((inputPercentage / 100) * levelConfig.totalCells)
-  // selectedCount already represents the actual filled cells (from gridState)
-  // sliderCells should match selectedCount because they're synced
-  // Use only selectedCount to avoid double counting
-  const totalSelected = selectedCount
+  // Ensure totalSelected matches sliderCells exactly
+  // sliderCells represents the current slider value, which should match selectedCount
+  // Use sliderCells to ensure consistency with the slider display
+  const totalSelected = sliderCells
   const totalCount = totalSelected + wasteCellsCount
   
   // Calculate required cells for button state
