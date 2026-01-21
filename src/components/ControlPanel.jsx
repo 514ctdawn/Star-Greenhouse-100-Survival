@@ -22,6 +22,8 @@ function ControlPanel({
   // Use selectedCount as the source of truth - it represents actual filled cells from gridState
   // This ensures "總計已選" matches "已手動填充" exactly
   const totalSelected = selectedCount
+  // totalCount = manually filled cells (selectedCount) + waste cells (wasteCellsCount)
+  // This is correct: selectedCount excludes waste, so adding wasteCellsCount gives the total filled
   const totalCount = totalSelected + wasteCellsCount
   
   // Calculate required cells for button state

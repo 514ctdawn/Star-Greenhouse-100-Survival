@@ -123,6 +123,7 @@ export function useGameState() {
 
   // Calculate filled cells (excluding waste) - 即時更新
   const filledCells = useMemo(() => {
+    // Only count cells that are filled AND not waste cells
     return gridState.filter((filled, index) => filled && !wasteIndices[index]).length
   }, [gridState, wasteIndices])
   
