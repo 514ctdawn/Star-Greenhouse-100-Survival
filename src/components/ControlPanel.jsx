@@ -19,10 +19,9 @@ function ControlPanel({
 
   // Calculate slider cells for display
   const sliderCells = Math.round((inputPercentage / 100) * levelConfig.totalCells)
-  // Ensure totalSelected matches sliderCells exactly
-  // sliderCells represents the current slider value, which should match selectedCount
-  // Use sliderCells to ensure consistency with the slider display
-  const totalSelected = sliderCells
+  // Use selectedCount as the source of truth - it represents actual filled cells from gridState
+  // This ensures "總計已選" matches "已手動填充" exactly
+  const totalSelected = selectedCount
   const totalCount = totalSelected + wasteCellsCount
   
   // Calculate required cells for button state
@@ -31,8 +30,9 @@ function ControlPanel({
 
   // Slider adjustment functions
   const adjustSlider = (delta) => {
-    const currentCells = Math.round((inputPercentage / 100) * levelConfig.totalCells)
-    const newCells = Math.max(0, Math.min(levelConfig.totalCells, currentCells + delta))
+    // Use selectedCount as the base to ensure consistency
+    const currentCells = selectedCount
+    const newCells = Math.max(0, Math.min(levelConfig.totalCells - wasteCellsCount, currentCells + delta))
     const percentage = (newCells / levelConfig.totalCells) * 100
     onInputChange(percentage)
     if (onSliderChange) {
@@ -106,7 +106,7 @@ function ControlPanel({
               type="range"
               min="0"
               max={levelConfig.totalCells}
-              value={sliderCells}
+              value={selectedCount}
               onChange={(e) => {
                 const cellCount = Number(e.target.value)
                 const percentage = (cellCount / levelConfig.totalCells) * 100
@@ -117,7 +117,7 @@ function ControlPanel({
               }}
               className="flex-1 h-6 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-500 border border-white/10"
               style={{
-                background: `linear-gradient(to right, #22d3ee 0%, #22d3ee ${(inputPercentage / 100) * 100}%, #1e293b ${(inputPercentage / 100) * 100}%, #1e293b 100%)`
+                background: `linear-gradient(to right, #22d3ee 0%, #22d3ee ${(selectedCount / levelConfig.totalCells) * 100}%, #1e293b ${(selectedCount / levelConfig.totalCells) * 100}%, #1e293b 100%)`
               }}
             />
             <button
@@ -127,7 +127,7 @@ function ControlPanel({
               <Plus className="w-4 h-4" />
             </button>
             <div className="w-20 px-3 py-2 bg-slate-800 border border-white/10 rounded text-center text-cyan-400 font-bold font-mono text-lg">
-              {sliderCells}
+              {selectedCount}
             </div>
             <span className="text-slate-400 text-sm font-semibold">格</span>
           </div>
