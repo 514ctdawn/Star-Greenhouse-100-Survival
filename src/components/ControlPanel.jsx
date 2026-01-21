@@ -84,12 +84,6 @@ function ControlPanel({
                 <span className="text-red-400 font-mono font-bold">{wasteCellsCount} 格</span>
               </div>
             )}
-            <div className="border-t border-white/10 pt-3 flex justify-between items-center">
-              <span className="text-slate-200 font-semibold">總計填充：</span>
-              <span className="text-cyan-400 font-mono font-bold text-lg">
-                {totalSelected} / {levelConfig.totalCells} 格
-              </span>
-            </div>
           </div>
         </div>
 
