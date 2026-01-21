@@ -42,6 +42,9 @@ function App() {
     pressureWarning,
     plantWilting,
     
+    // Progressive hints
+    failureAttempts,
+    
     // Actions
     setTargetPercentage,
     setInputPercentage,
@@ -243,6 +246,8 @@ function App() {
         impurityMode={wasteCellsCount > 0}
         wasteCellsCount={wasteCellsCount}
         totalCells={levelConfig.totalCells}
+        currentLevel={currentLevel}
+        failureAttempts={failureAttempts}
         onClose={handleCloseFeedback}
         onNext={handleNextLevel}
         onRetry={handleRetry}

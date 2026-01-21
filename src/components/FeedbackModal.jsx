@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { CheckCircle, XCircle, AlertTriangle, ArrowRight, RotateCcw, HelpCircle } from 'lucide-react'
 import { useEffect } from 'react'
+import { getLevelHint, getHintLevelDescription } from '../utils/hintSystem'
 
 // Sound effect placeholders
 const playSuccessSound = () => {
@@ -26,6 +27,8 @@ function FeedbackModal({
   impurityMode,
   wasteCellsCount,
   totalCells,
+  currentLevel, // Add current level for hints
+  failureAttempts, // Add failure attempts count
   onClose,
   onNext,
   onRetry,
@@ -60,15 +63,19 @@ function FeedbackModal({
     // Precise failure message using cell counts
     errorMessage = `不正確。對於 ${totalCells} 格的容器，${targetPercentage}% 需要 ${requiredTotalCells} 個總格數。您有 ${actualTotalCells} 個。`
     
+    // Get progressive hint based on failure attempts
+    const attemptCount = failureAttempts?.[currentLevel] || 1
+    const progressiveHint = getLevelHint(currentLevel, attemptCount, totalCells, targetPercentage, wasteCellsCount)
+    
     if (isOver100) {
       errorType = 'overload'
-      hintMessage = `您填寫了 ${actualTotalCells} 格（含廢料 ${wasteCount} 格），超過了目標所需的 ${requiredTotalCells} 格。`
+      hintMessage = `您填寫了 ${actualTotalCells} 格（含廢料 ${wasteCellsCount} 格），超過了目標所需的 ${requiredTotalCells} 格。\n\n${progressiveHint}`
     } else if (isUnderTarget) {
       errorType = 'insufficient'
-      hintMessage = `目前只有 ${actualTotalCells} 格，還需要 ${requiredTotalCells - actualTotalCells} 格才能達到目標。`
+      hintMessage = `目前只有 ${actualTotalCells} 格，還需要 ${requiredTotalCells - actualTotalCells} 格才能達到目標。\n\n${progressiveHint}`
     } else {
       errorType = 'mismatch'
-      hintMessage = `目前總計 ${actualTotalCells} 格，但目標需要 ${requiredTotalCells} 格。請重新計算。`
+      hintMessage = `目前總計 ${actualTotalCells} 格，但目標需要 ${requiredTotalCells} 格。請重新計算。\n\n${progressiveHint}`
     }
   }
 
@@ -218,9 +225,14 @@ function FeedbackModal({
                   className="flex items-start gap-3 p-4 bg-yellow-900/30 border border-yellow-500/50 rounded-lg"
                 >
                   <HelpCircle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
-                  <p className="text-yellow-200 text-sm leading-relaxed">
-                    {hintMessage}
-                  </p>
+                  <div className="flex-1">
+                    <div className="text-yellow-300 text-xs font-semibold mb-1">
+                      {failureAttempts?.[currentLevel] ? `第 ${failureAttempts[currentLevel]} 次嘗試 - ${getHintLevelDescription(failureAttempts[currentLevel])}` : '提示'}
+                    </div>
+                    <p className="text-yellow-200 text-sm leading-relaxed whitespace-pre-line">
+                      {hintMessage}
+                    </p>
+                  </div>
                 </motion.div>
               )}
 

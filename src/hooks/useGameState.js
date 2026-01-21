@@ -35,6 +35,9 @@ export function useGameState() {
   const [pressureWarning, setPressureWarning] = useState(false)
   const [plantWilting, setPlantWilting] = useState(false)
   const [lowOxygenTimer, setLowOxygenTimer] = useState(null)
+  
+  // Track failure attempts per level for progressive hints
+  const [failureAttempts, setFailureAttempts] = useState({ A: 0, B: 0, C: 0 })
 
   // Initialize level
   useEffect(() => {
@@ -56,6 +59,13 @@ export function useGameState() {
       newWasteIndices[i] = true
     }
     setWasteIndices(newWasteIndices)
+    
+    // Reset failure attempts when level changes (not on retry)
+    // Only reset if it's a new level (not just a retry)
+    setFailureAttempts(prev => {
+      // Keep attempts for other levels, reset current level
+      return { ...prev, [currentLevel]: 0 }
+    })
   }, [currentLevel])
 
   // Countdown timer
@@ -204,18 +214,24 @@ export function useGameState() {
     const isCorrect = currentTotal === requiredCount
     
     if (isCorrect) {
-      // Success!
+      // Success! Reset failure attempts for this level
       console.log(`[判定邏輯] ✅ 任務成功！實際 ${currentTotal} 格 = 目標 ${requiredCount} 格`)
       setInputPercentage(0)
       setOxygen(prev => Math.min(100, prev + 10)) // Reward: restore oxygen
       setIsTimerRunning(false)
+      // Reset failure attempts on success
+      setFailureAttempts(prev => ({ ...prev, [currentLevel]: 0 }))
       return true
     } else {
-      // Failure
+      // Failure - increment attempt count
       console.log(`[判定邏輯] ❌ 任務失敗！實際 ${currentTotal} 格 ≠ 目標 ${requiredCount} 格`)
+      setFailureAttempts(prev => ({
+        ...prev,
+        [currentLevel]: (prev[currentLevel] || 0) + 1
+      }))
       return false
     }
-  }, [gridState, wasteIndices, levelConfig.totalCells, targetPercentage])
+  }, [gridState, wasteIndices, levelConfig.totalCells, targetPercentage, currentLevel])
 
   const resetGame = useCallback(() => {
     const config = getLevelConfig(currentLevel)
@@ -242,6 +258,9 @@ export function useGameState() {
     }
     setWasteIndices(newWasteIndices)
     
+    // Note: Don't reset failure attempts on retry - keep them for progressive hints
+    // Only reset on level change (handled in useEffect)
+    
     if (lowOxygenTimer) {
       clearTimeout(lowOxygenTimer)
       setLowOxygenTimer(null)
@@ -255,6 +274,9 @@ export function useGameState() {
     if (levelId && levelId !== currentLevel) {
       console.log('✅ Setting currentLevel to:', levelId)
       setCurrentLevel(levelId)
+      
+      // Reset failure attempts for the new level (will be handled by useEffect, but ensure it's reset)
+      setFailureAttempts(prev => ({ ...prev, [levelId]: 0 }))
       
       // Force immediate update
       setTimeout(() => {
@@ -296,6 +318,9 @@ export function useGameState() {
     // Effects
     pressureWarning,
     plantWilting,
+    
+    // Progressive hints
+    failureAttempts,
     
     // Actions
     updateOxygen: setOxygen,
