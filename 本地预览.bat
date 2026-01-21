@@ -1,24 +1,22 @@
 @echo off
 chcp 65001 >nul
-title Star Greenhouse: 100% Survival
+title Star Greenhouse - 本地预览
 color 0A
 
 echo.
 echo ╔══════════════════════════════════════════════════════╗
 echo ║     Star Greenhouse: 100%% Survival                  ║
+echo ║     本地预览版本（无路径问题）                       ║
 echo ╚══════════════════════════════════════════════════════╝
 echo.
 
-REM 检查是否已构建
-if not exist "dist\index.html" (
-    echo ⚠️  构建文件不存在，正在构建...
-    echo.
-    call npm run build
-    echo.
-    echo ✅ 构建完成
-    echo.
-)
+echo 正在构建本地预览版本...
+echo.
+call npm run build:local
 
+echo.
+echo ✅ 构建完成！
+echo.
 echo 正在启动预览服务器...
 echo.
 echo 📌 游戏将在浏览器中自动打开
@@ -28,7 +26,5 @@ echo 💡 提示：关闭此窗口即可停止服务器
 echo.
 timeout /t 2 /nobreak >nul
 
-REM 使用 Vite preview（预览构建后的文件）
 start chrome "http://localhost:4173"
-call npm run preview
-
+call vite preview --config vite.config.local.js

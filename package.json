@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:local": "vite build --config vite.config.local.js",
     "preview": "vite preview",
+    "preview:local": "npm run build:local && vite preview --config vite.config.local.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist --no-history"
   },

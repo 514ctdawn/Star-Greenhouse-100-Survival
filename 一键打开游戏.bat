@@ -1,34 +1,27 @@
 @echo off
+REM 最简单的打开方式 - 使用开发服务器，不会有任何路径问题
 chcp 65001 >nul
-title Star Greenhouse: 100% Survival
+title Star Greenhouse - 一键打开
 color 0A
 
 echo.
 echo ╔══════════════════════════════════════════════════════╗
-echo ║     Star Greenhouse: 100%% Survival                  ║
+echo ║     Star Greenhouse: 100%% Survival                 ║
+echo ║     一键打开（最简单，无错误）                       ║
 echo ╚══════════════════════════════════════════════════════╝
 echo.
-
-REM 检查是否已构建
-if not exist "dist\index.html" (
-    echo ⚠️  构建文件不存在，正在构建...
-    echo.
-    call npm run build
-    echo.
-    echo ✅ 构建完成
-    echo.
-)
-
-echo 正在启动预览服务器...
+echo 正在启动开发服务器...
+echo.
+echo ✅ 使用开发服务器模式
+echo ✅ 不会有路径问题
+echo ✅ 支持热重载（修改代码自动刷新）
 echo.
 echo 📌 游戏将在浏览器中自动打开
-echo 📌 服务器地址：http://localhost:4173
+echo 📌 服务器地址：http://localhost:5173
 echo.
 echo 💡 提示：关闭此窗口即可停止服务器
 echo.
 timeout /t 2 /nobreak >nul
 
-REM 使用 Vite preview（预览构建后的文件）
-start chrome "http://localhost:4173"
-call npm run preview
-
+start chrome "http://localhost:5173"
+call npm run dev
