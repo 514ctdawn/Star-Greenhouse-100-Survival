@@ -84,6 +84,30 @@ body {
   touch-action: none;
 }
 
+/* Mobile touch optimizations */
+@media (max-width: 640px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  button, input[type="range"] {
+    touch-action: manipulation;
+  }
+  
+  /* Prevent zoom on double tap */
+  input[type="range"] {
+    -webkit-touch-callout: none;
+  }
+}
+
+/* Improve touch targets on mobile */
+@media (max-width: 640px) {
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
 /* Prevent text selection during drag */
 .no-select {
   user-select: none;

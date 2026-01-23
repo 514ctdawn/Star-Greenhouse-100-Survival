@@ -110,7 +110,7 @@ function FeedbackModal({
                 x: { duration: 0.5, repeat: 0 }
               } : {})
             }}
-            className={`fixed z-[60] w-full max-w-lg mx-4 ${
+            className={`fixed z-[60] w-full max-w-lg mx-2 sm:mx-4 ${
               status === 'success'
                 ? 'bg-emerald-900/95 border-2 border-emerald-400'
                 : 'bg-rose-900/95 border-2 border-rose-400'
@@ -121,22 +121,24 @@ function FeedbackModal({
               left: '50%',
               transform: 'translate(-50%, -50%)',
               zIndex: 60,
+              maxHeight: '90vh',
+              overflowY: 'auto',
             }}
           >
             {/* Header */}
-            <div className={`p-6 ${
+            <div className={`p-3 sm:p-6 ${
               status === 'success'
                 ? 'bg-emerald-800/50'
                 : 'bg-rose-800/50'
             }`}>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-4">
                 {status === 'success' ? (
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: [0, 1.2, 1] }}
                     transition={{ delay: 0.2, type: 'spring' }}
                   >
-                    <CheckCircle className="w-12 h-12 text-emerald-400" />
+                    <CheckCircle className="w-8 h-8 sm:w-12 sm:h-12 text-emerald-400" />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -144,11 +146,11 @@ function FeedbackModal({
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ type: 'spring', stiffness: 200 }}
                   >
-                    <XCircle className="w-12 h-12 text-rose-400" />
+                    <XCircle className="w-8 h-8 sm:w-12 sm:h-12 text-rose-400" />
                   </motion.div>
                 )}
                 <div className="flex-1">
-                  <h2 className={`text-2xl font-bold ${
+                  <h2 className={`text-lg sm:text-xl lg:text-2xl font-bold ${
                     status === 'success' ? 'text-emerald-300' : 'text-rose-300'
                   }`}>
                     {status === 'success' 
@@ -161,9 +163,9 @@ function FeedbackModal({
             </div>
 
             {/* Content */}
-            <div className="p-6 space-y-4">
+            <div className="p-3 sm:p-6 space-y-3 sm:space-y-4">
               {/* Main Message */}
-              <p className={`text-lg leading-relaxed ${
+              <p className={`text-sm sm:text-base lg:text-lg leading-relaxed ${
                 status === 'success' ? 'text-emerald-100' : 'text-rose-100'
               }`}>
                 {status === 'success' 
@@ -173,12 +175,12 @@ function FeedbackModal({
               </p>
 
               {/* Data Summary */}
-              <div className={`p-4 rounded-lg border ${
+              <div className={`p-2 sm:p-4 rounded-lg border ${
                 status === 'success'
                   ? 'bg-emerald-800/30 border-emerald-500/50'
                   : 'bg-rose-800/30 border-rose-500/50'
               }`}>
-                <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-2 gap-2 sm:gap-4 text-xs sm:text-sm">
                   <div>
                     <span className={`${
                       status === 'success' ? 'text-emerald-300' : 'text-rose-300'
@@ -255,7 +257,7 @@ function FeedbackModal({
             </div>
 
             {/* Actions */}
-            <div className={`p-6 flex gap-3 ${
+            <div className={`p-3 sm:p-6 flex flex-col sm:flex-row gap-2 sm:gap-3 ${
               status === 'success' ? 'bg-emerald-800/30' : 'bg-rose-800/30'
             }`}>
               {status === 'success' ? (
@@ -271,14 +273,14 @@ function FeedbackModal({
                         console.error('⚠️ onNext is not defined!')
                       }
                     }}
-                    className="flex-1 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-400 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 touch-manipulation text-sm sm:text-base"
                   >
                     進入下一關
-                    <ArrowRight className="w-5 h-5" />
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                   <button
                     onClick={onClose}
-                    className="px-6 py-3 bg-emerald-700/50 hover:bg-emerald-700/70 text-emerald-200 rounded-lg transition-colors"
+                    className="px-4 sm:px-6 py-2 sm:py-3 bg-emerald-700/50 hover:bg-emerald-700/70 active:bg-emerald-700/90 text-emerald-200 rounded-lg transition-colors touch-manipulation text-sm sm:text-base"
                   >
                     繼續強化基地
                   </button>
@@ -287,16 +289,16 @@ function FeedbackModal({
                 <>
                   <button
                     onClick={onRetryLevel}
-                    className="flex-1 px-6 py-3 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 px-4 sm:px-6 py-2 sm:py-3 bg-rose-600 hover:bg-rose-500 active:bg-rose-400 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 touch-manipulation text-sm sm:text-base"
                   >
-                    <RotateCcw className="w-5 h-5" />
+                    <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
                     重新嘗試本關
                   </button>
                   <button
                     onClick={onRetryLevel}
-                    className="px-6 py-3 bg-rose-700/50 hover:bg-rose-700/70 text-rose-200 rounded-lg transition-colors flex items-center justify-center gap-2"
+                    className="px-4 sm:px-6 py-2 sm:py-3 bg-rose-700/50 hover:bg-rose-700/70 active:bg-rose-700/90 text-rose-200 rounded-lg transition-colors flex items-center justify-center gap-2 touch-manipulation text-sm sm:text-base"
                   >
-                    <RotateCcw className="w-4 h-4" />
+                    <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4" />
                     重新開始
                   </button>
                 </>

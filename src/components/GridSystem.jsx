@@ -21,8 +21,10 @@ function GridSystem({
   const dragStartRef = useRef(null)
   const hasMovedRef = useRef(false)
   const mouseDownRef = useRef(false)
+  const touchDownRef = useRef(false)
   const dragModeRef = useRef(null) // 'fill' or 'erase'
   const processedCellsRef = useRef(new Set()) // Track cells already processed during drag
+  const lastTouchCellRef = useRef(null) // Track last touched cell for touch drag
 
   // Calculate cell states from gridState and wasteIndices
   const cellStates = useMemo(() => {
@@ -63,7 +65,7 @@ function GridSystem({
 
   // Handle mouse enter (during drag) - Enhanced sliding selection
   const handleMouseEnter = useCallback((index, e) => {
-    if (!mouseDownRef.current) return
+    if (!mouseDownRef.current && !touchDownRef.current) return
     
     e.preventDefault()
     e.stopPropagation()
@@ -96,35 +98,58 @@ function GridSystem({
         processedCellsRef.current.add(index)
       }
     }
+    
+    lastTouchCellRef.current = index
   }, [onCellToggle, gridState, wasteIndices])
 
-  // Handle mouse up
+  // Handle mouse up / touch end
   const handleMouseUp = useCallback((e) => {
-    if (mouseDownRef.current && dragStartRef.current !== null && !hasMovedRef.current) {
-      // This was a click, not a drag - toggle the cell
+    if ((mouseDownRef.current || touchDownRef.current) && dragStartRef.current !== null && !hasMovedRef.current) {
+      // This was a click/tap, not a drag - toggle the cell
       if (onCellToggle && !wasteIndices[dragStartRef.current]) {
         onCellToggle(dragStartRef.current)
       }
     }
     mouseDownRef.current = false
+    touchDownRef.current = false
     dragStartRef.current = null
     hasMovedRef.current = false
     setIsDragging(false)
     dragModeRef.current = null
     processedCellsRef.current.clear()
+    lastTouchCellRef.current = null
   }, [onCellToggle, wasteIndices])
+  
+  // Handle touch move for mobile drag
+  const handleTouchMove = useCallback((e) => {
+    if (!touchDownRef.current) return
+    
+    e.preventDefault()
+    e.stopPropagation()
+    
+    const touch = e.touches[0]
+    const element = document.elementFromPoint(touch.clientX, touch.clientY)
+    
+    if (element && element.dataset.cellIndex !== undefined) {
+      const index = parseInt(element.dataset.cellIndex)
+      
+      if (index !== lastTouchCellRef.current) {
+        handleMouseEnter(index, e)
+      }
+    }
+  }, [handleMouseEnter])
 
   // Start drag after movement
   useEffect(() => {
-    if (mouseDownRef.current) {
+    if (mouseDownRef.current || touchDownRef.current) {
       const timer = setTimeout(() => {
-        if (mouseDownRef.current && hasMovedRef.current) {
+        if ((mouseDownRef.current || touchDownRef.current) && hasMovedRef.current) {
           setIsDragging(true)
         }
       }, 50)
       return () => clearTimeout(timer)
     }
-  }, [mouseDownRef.current, hasMovedRef.current])
+  }, [mouseDownRef.current, touchDownRef.current, hasMovedRef.current])
 
   // Get cell class based on state - Enhanced with rounded-sm and inner-shadow
   const getCellClass = (state, index) => {
@@ -141,31 +166,32 @@ function GridSystem({
     }
   }
 
-  // Calculate cell size based on grid size
+  // Calculate cell size based on grid size - responsive for mobile
   const getCellSize = () => {
-    if (totalCells <= 50) return 'w-10 h-10'
-    if (totalCells <= 100) return 'w-8 h-8'
-    return 'w-6 h-6'
+    // Mobile-first: smaller cells on mobile
+    if (totalCells <= 50) return 'w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10'
+    if (totalCells <= 100) return 'w-5 h-5 sm:w-7 sm:h-7 lg:w-8 lg:h-8'
+    return 'w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6'
   }
 
   const cellSizeClass = getCellSize()
   const isLowTime = timeRemaining && timeRemaining <= 10 && timeRemaining > 0
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto">
+    <div className="relative w-full max-w-4xl mx-auto px-2 sm:px-0">
       {/* Header */}
-      <div className="mb-6 text-center">
-        <div className="text-3xl font-bold text-cyan-400 mb-2 font-mono">
+      <div className="mb-3 sm:mb-6 text-center">
+        <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-cyan-400 mb-1 sm:mb-2 font-mono">
           🚀 當前儲氣槽容量：{totalCells} 格
         </div>
-        <div className="text-xl font-bold text-emerald-400 font-mono">
+        <div className="text-sm sm:text-lg lg:text-xl font-bold text-emerald-400 font-mono">
           目標達成量：{targetPercentage}%
         </div>
       </div>
 
       {/* Greenhouse Frame - Low Time Red Flash Effect */}
       <motion.div 
-        className="border border-white/10 rounded-lg p-4 bg-slate-800/50 shadow-lg transition-all duration-300 relative"
+        className="border border-white/10 rounded-lg p-2 sm:p-4 bg-slate-800/50 shadow-lg transition-all duration-300 relative"
         animate={isLowTime ? {
           backgroundColor: [
             'rgba(30, 41, 59, 0.5)',
@@ -177,9 +203,9 @@ function GridSystem({
       >
         {/* Grid Container */}
         <div className="flex justify-center">
-          <div className="overflow-x-auto no-select">
+          <div className="overflow-x-auto no-select w-full">
             <div
-              className="grid gap-2"
+              className="grid gap-1 sm:gap-2 mx-auto"
               style={{
                 gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))`,
               }}
@@ -193,6 +219,11 @@ function GridSystem({
                   handleMouseUp(e)
                 }
               }}
+              onTouchEnd={(e) => {
+                e.stopPropagation()
+                handleMouseUp(e)
+              }}
+              onTouchMove={handleTouchMove}
               onClick={(e) => {
                 e.stopPropagation()
               }}
@@ -234,6 +265,15 @@ function GridSystem({
                       handleMouseDown(index, e)
                     }
                   }}
+                  onTouchStart={(e) => {
+                    e.stopPropagation()
+                    e.preventDefault()
+                    if (isClickable) {
+                      touchDownRef.current = true
+                      handleMouseDown(index, e)
+                    }
+                  }}
+                  data-cell-index={index}
                   onClick={(e) => {
                     // Prevent default click behavior - handleMouseUp already handles the toggle
                     e.stopPropagation()
@@ -242,7 +282,7 @@ function GridSystem({
                     // This prevents double-toggling which causes double counting
                   }}
                   onMouseEnter={(e) => {
-                    if (isClickable && mouseDownRef.current) {
+                    if (isClickable && (mouseDownRef.current || touchDownRef.current)) {
                       handleMouseEnter(index, e)
                     }
                   }}
@@ -255,8 +295,8 @@ function GridSystem({
         </div>
 
         {/* Plant Life Indicator - Scanline Effect, Green when Near Target */}
-        <div className="mt-4 space-y-2">
-          <div className="flex items-center justify-between text-sm">
+        <div className="mt-2 sm:mt-4 space-y-1 sm:space-y-2">
+          <div className="flex items-center justify-between text-xs sm:text-sm">
             <span className="text-slate-300 font-semibold">植物生命狀態</span>
             <span className={`font-bold font-mono ${
               progressRatio >= 0.8 ? 'text-emerald-400' :
@@ -306,11 +346,11 @@ function GridSystem({
       </motion.div>
 
       {/* Cell Count Display */}
-      <div className="mt-4 text-center">
-        <div className="text-lg font-semibold text-slate-300 font-mono">
-          已手動填充：{selectedCount} 格
+      <div className="mt-2 sm:mt-4 text-center">
+        <div className="text-sm sm:text-base lg:text-lg font-semibold text-slate-300 font-mono">
+          <span className="block sm:inline">已手動填充：{selectedCount} 格</span>
           {wasteIndices.filter(Boolean).length > 0 && (
-            <span className="text-red-400 ml-4">
+            <span className="block sm:inline text-red-400 sm:ml-4">
               | 廢料佔用：{wasteIndices.filter(Boolean).length} 格
             </span>
           )}

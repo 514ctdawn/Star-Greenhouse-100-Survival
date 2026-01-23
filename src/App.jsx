@@ -257,7 +257,7 @@ function App() {
       {/* Main Layout */}
       <div className="flex flex-col h-screen">
         {/* Countdown Bar */}
-        <div className="px-4 pt-2 pb-2">
+        <div className="px-2 sm:px-4 pt-2 pb-2">
           <CountdownBar 
             timeRemaining={timeRemaining}
             timeLimit={levelConfig.timeLimit}
@@ -266,10 +266,10 @@ function App() {
         </div>
 
         {/* Main Content - Grid Centered */}
-        <div className="flex-1 flex items-center justify-center overflow-hidden p-4">
-          <div className="w-full max-w-6xl mx-auto flex gap-4">
+        <div className="flex-1 flex items-center justify-center overflow-hidden p-2 sm:p-4">
+          <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row gap-2 sm:gap-4">
             {/* Center Canvas - Grid (Centered) */}
-            <div className="flex-1 flex items-center justify-center overflow-auto">
+            <div className="flex-1 flex items-center justify-center overflow-auto min-h-0">
               <GridSystem
                 gridState={gridState}
                 inputPercentage={inputPercentage}
@@ -284,7 +284,7 @@ function App() {
             </div>
 
             {/* Control Panel */}
-            <div className="w-80 bg-slate-800/50 rounded-lg p-6 border border-white/10 relative flex flex-col overflow-hidden">
+            <div className="w-full lg:w-80 bg-slate-800/50 rounded-lg p-3 sm:p-6 border border-white/10 relative flex flex-col overflow-hidden max-h-[50vh] lg:max-h-none">
               <ControlPanel
                 targetPercentage={targetPercentage}
                 inputPercentage={inputPercentage}
